@@ -5,8 +5,14 @@
  */
 package Retos.Servicio;
 
+import Retos.Modelo.Custom.Auxiliar;
+import Retos.Modelo.Custom.Auxiliar2;
 import Retos.Modelo.Reservacion;
 import Retos.Repositorio.RepositorioReservacion;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,4 +104,34 @@ public Reservacion update(Reservacion reservacion){
         return aBoolean;
     }
 
+    public List<Auxiliar> getTopCliente(){
+        return metodosCrud.getTopCliente();
+    }
+    
+    public Auxiliar2 getstatusReport(){
+        List<Reservacion> completed = metodosCrud.getReservacionesByStatus("completed");
+        List<Reservacion> cancelled = metodosCrud.getReservacionesByStatus("cancelled");
+        
+        Auxiliar2 status = new Auxiliar2(completed.size(), cancelled.size());
+        return status;
+    }
+    
+    public List<Reservacion> getReservasPeriodo(String d1, String d2){
+        SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateOne = new Date();
+        Date dateTwo = new Date();
+        
+        try {
+            dateOne = parser.parse(d1);
+            dateTwo = parser.parse(d2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(dateOne.before(dateTwo)){
+            return metodosCrud.getReservacionesByPeriod(dateOne, dateTwo);
+        }else{
+            return new ArrayList<>();
+        }
+        
+    }
 }

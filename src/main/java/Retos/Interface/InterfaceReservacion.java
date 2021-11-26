@@ -6,6 +6,9 @@
 package Retos.Interface;
 
 import Retos.Modelo.Reservacion;
+import java.util.Date;
+import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -14,4 +17,10 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface InterfaceReservacion extends CrudRepository<Reservacion,Integer>{
     
+    public List<Reservacion> findAllByStartDateAfterAndStartDateBefore (Date dateOne, Date dateTwo);
+    
+    public List<Reservacion> findAllByStatus (String status);
+    
+    @Query("select r.client, COUNT(r.client) from Reservacion AS r group by r.client order by COUNT(r.client) desc")
+    public List<Object[]> countTotalReservacionByClient();
 }

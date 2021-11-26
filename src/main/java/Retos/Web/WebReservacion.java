@@ -5,6 +5,8 @@
  */
 package Retos.Web;
 
+import Retos.Modelo.Custom.Auxiliar;
+import Retos.Modelo.Custom.Auxiliar2;
 import Retos.Modelo.Reservacion;
 import Retos.Servicio.ServicioReservacion;
 import java.util.List;
@@ -32,31 +34,46 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT,RequestMethod.DELETE})
 public class WebReservacion {
     @Autowired
-    private ServicioReservacion servico;
+    private ServicioReservacion servicio;
     @GetMapping("/all")
     public List<Reservacion> getReservation(){
-        return servico.getAll();
+        return servicio.getAll();
     }
 
     @GetMapping("/{id}")
     public Optional<Reservacion> getReservacion(@PathVariable("id") int messageId) {
-        return servico.getReservation(messageId);
+        return servicio.getReservation(messageId);
     }
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public Reservacion save(@RequestBody Reservacion reservation) {
-        return servico.save(reservation);
+        return servicio.save(reservation);
     }
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.CREATED)
     public Reservacion update(@RequestBody Reservacion reservation) {
-        return servico.update(reservation);
+        return servicio.update(reservation);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public boolean delete(@PathVariable("id") int idReservation) {
-        return servico.deleteReservation(idReservation);
+        return servicio.deleteReservation(idReservation);
+    }
+    
+    @GetMapping("/report-status")
+    public Auxiliar2 getReservacionesStatus(){
+        return servicio.getstatusReport();
+    }
+    
+    @GetMapping("/report-clients")
+    public List<Auxiliar> getTopClients(){
+        return servicio.getTopCliente();
+    }
+    
+    @GetMapping("/report-dates/{dateOne}/{dateTwo}")
+    public List<Reservacion> getDatesReport(@PathVariable("dateOne")String d1,@PathVariable("dateTwo") String d2){
+        return servicio.getReservasPeriodo(d1, d2);
     }
 }
